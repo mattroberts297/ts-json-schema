@@ -1,0 +1,17 @@
+{{#objects}}
+export function parse{{title}}(json: string): {{title}} | Error {
+  const obj = JSON.parse(json);
+  {{#properties}}
+  {{#required}}
+  if (obj["{{name}}"] === undefined || typeof obj["{{name}}"] !== "{{type}}") {
+    return new Error("Expected field of type {{type}}: {{name}}");
+  }
+  {{/required}}
+  {{/properties}}
+  return {
+    {{#properties}}
+    {{name}}: <{{type}}{{^required}} | undefined{{/required}}> obj["{{name}}"]{{^last}},{{/last}}
+    {{/properties}}
+  };
+}
+{{/objects}}

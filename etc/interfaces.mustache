@@ -1,0 +1,7 @@
+{{#objects}}
+export interface {{title}} {
+  {{#properties}}
+  {{name}}{{^required}}?{{/required}}: {{type}};
+  {{/properties}}
+}
+{{/objects}}

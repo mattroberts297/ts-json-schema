@@ -1,0 +1,27 @@
+{
+  "objects": [
+    {
+      "title": "Person",
+      "properties": [
+        {
+          "name": "firstName",
+          "type": "string",
+          "required": true,
+          "object": false
+        },
+        {
+          "name": "lastName",
+          "type": "string",
+          "required": true,
+          "object": false
+        },
+        {
+          "name": "age",
+          "type": "number",
+          "object": false,
+          "last": true
+        }
+      ]
+    }
+  ]
+}

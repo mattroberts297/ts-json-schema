@@ -1,0 +1,23 @@
+{
+  "title": "JwkSet",
+  "type": "object",
+  "properties": {
+    "keys": {
+      "type": "array",
+      "items": {
+        "title": "Jwk",
+        "type": "object",
+        "properties": {
+          "alg": { "type": "string" },
+          "e": { "type": "string" },
+          "kid": { "type": "string" },
+          "kty": { "type": "string" },
+          "n": { "type": "string" },
+          "use": { "type": "string" }
+        },
+        "required": ["alg", "e", "kid", "kty", "n"]
+      }
+    }
+  },
+  "required": ["keys"]
+}

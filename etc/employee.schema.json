@@ -1,0 +1,17 @@
+{
+  "title": "Employee",
+  "type": "object",
+  "properties": {
+    "firstName": { "type": "string" },
+    "lastName": { "type": "string" },
+    "company": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "size": { "type": "integer" }
+      },
+      "required": ["name"]
+    }
+  },
+  "required": ["firstName", "lastName"]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "lambda-echo-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc",
+    "pretest": "tsc",
+    "test": "mocha lib/**/*.spec.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^3.5.1",
+    "@types/lodash": "^4.14.92",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^7.0.48",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "ts-mockito": "^2.2.7",
+    "typemoq": "^2.1.0",
+    "typescript": "^2.4.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "mustache": "^2.3.0",
+    "promise": "^8.0.1"
+  }
+}
