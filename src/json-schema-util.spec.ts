@@ -2,18 +2,8 @@ import { JsonSchema } from "./json-schema"
 import { parse, generateInterface, generateParser } from "./json-schema-util";
 import "mocha";
 import { expect } from "chai";
-import fs = require("fs");
+import { readFile } from "./fs";
 import * as _ from "lodash";
-
-const readFile = (path: string) => new Promise<string>((resolve, reject) => {
-  fs.readFile(path, 'utf-8', (err, file) => {
-    if (err) {
-      reject(err);
-    } else {
-      resolve(file);
-    }
-  });
-});
 
 describe("parse", () => {
   it("should parse the person schema", (done) => {
@@ -42,7 +32,7 @@ describe("parse", () => {
         lastName: { type: "string" },
         company: {
           type: "object",
-          title: undefined,
+          title: "Company",
           properties: {
             name: { type: "string" },
             size: { type: "integer" }
@@ -68,18 +58,7 @@ describe("generateInteface", () => {
       .then(() => done(), err => done(err));
   });
 });
-//
-// describe("generateInteface2", () => {
-//   it("should generate an interface for person", (done) => {
-//     const schema = readFile('etc/person.schema.json');
-//     const expected = "export interface Person {\n  firstName: string;\n  lastName: string;\n}"
-//     schema
-//       .then(str => parse(str))
-//       .then(schema => console.log(generateInterface(schema)))
-//       .then(() => done(), err => done(err));
-//   });
-// });
-//
+
 describe("generateParser", () => {
   it("should generate a parser for person", (done) => {
     const schema = readFile('etc/person.schema.json');

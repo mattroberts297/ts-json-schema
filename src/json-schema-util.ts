@@ -22,6 +22,7 @@ function parseAny(json: any): JsonSchema {
     } else if (json.type === "integer") {
       return <JsonSchema>({ type: "integer" });
     } else {
+      // TODO Add support for all json schema types.
       throw new Error(`Unsupported type: ${json.type}`);
     }
   } else {

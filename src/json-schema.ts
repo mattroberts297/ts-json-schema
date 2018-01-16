@@ -1,6 +1,6 @@
 export interface ObjectJsonSchema {
     type: "object";
-    title?: string;
+    title: string;
     properties: Properties;
     required?: string[];
   }

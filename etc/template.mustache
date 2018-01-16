@@ -1,0 +1,38 @@
+{{#objects}}
+export interface {{title}} {
+  {{#properties}}
+  {{name}}{{^required}}?{{/required}}: {{type}};
+  {{/properties}}
+}
+
+{{/objects}}
+{{#objects}}
+export function parse{{title}}(json: string): {{title}} {
+  const obj = JSON.parse(json);
+  {{#properties}}
+  {{#required}}
+  if (obj["{{name}}"] === undefined || typeof obj["{{name}}"] !== "{{type}}") {
+    throw new Error("Expected field of type {{type}}: {{name}}");
+  }
+  {{/required}}
+  {{/properties}}
+  return {
+    {{#properties}}
+    {{#object}}
+    {{name}}: {{^required}}opt(() => {{/required}}parse{{type}}(obj["{{name}}"]){{^required}}){{/required}}{{^last}},{{/last}}
+    {{/object}}
+    {{^object}}
+    {{name}}: <{{type}}{{^required}} | undefined{{/required}}> obj["{{name}}"]{{^last}},{{/last}}
+    {{/object}}
+    {{/properties}}
+  };
+}
+
+{{/objects}}
+function opt<T>(thunk: () => T): T | undefined {
+  try {
+    return thunk();
+  } catch(e) {
+    return undefined;
+  }
+}

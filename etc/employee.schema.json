@@ -1,11 +1,12 @@
 {
-  "title": "Employee",
   "type": "object",
+  "title": "Employee",
   "properties": {
     "firstName": { "type": "string" },
     "lastName": { "type": "string" },
     "company": {
       "type": "object",
+      "title": "Company",
       "properties": {
         "name": { "type": "string" },
         "size": { "type": "integer" }
