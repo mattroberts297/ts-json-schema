@@ -10,6 +10,7 @@ export interface MustacheJsonObject {
 export interface MustacheJsonProperty {
   name: string;
   type: string;
+  capitalizedType: string;
   required: boolean;
   object: boolean;
   array: boolean;

@@ -32,8 +32,10 @@ function deriveType(v: JsonSchema, k: string): string {
     return deriveType(v.items, k);
   } else if (v.type === "integer") {
     return "number";
+  } else if (v.type === "string") {
+    return "string";
   } else {
-    return v.type;
+    throw new Error("Unsupported type!");
   }
 } 
 
@@ -41,6 +43,7 @@ function createMustacheJsonProperty(s: ObjectJsonSchema, v: JsonSchema, k: strin
   return {
     name: k,
     type: deriveType(v, k),
+    capitalizedType: _.capitalize(deriveType(v, k)),
     required: (_.findIndex(s.required, r => r === k) !== -1),
     object: (v.type === "object"),
     array: (v.type === "array"),

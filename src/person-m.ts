@@ -4,17 +4,42 @@ export interface Person {
   age?: number;
 }
 
-export function parsePerson(json: string): Person | Error {
-  const obj = JSON.parse(json);
-  if (obj["firstName"] === undefined || typeof obj["firstName"] !== "string") {
-    return new Error("Expected field of type string: firstName");
-  }
-  if (obj["lastName"] === undefined || typeof obj["lastName"] !== "string") {
-    return new Error("Expected field of type string: lastName");
-  }
+export function unmarshalPerson(obj: any): Person {
   return {
-    firstName: <string> obj["firstName"],
-    lastName: <string> obj["lastName"],
-    age: <number | undefined> obj["age"]
+    firstName: unmarshalString(obj, "firstName"),
+    lastName: unmarshalString(obj, "lastName"),
+    age: opt(() => unmarshalNumber(obj, "age"))
   };
+}
+
+function unmarshalString(obj: any, key: string): string {
+  if (obj[key] === undefined || typeof obj[key] !== "string") {
+    throw new Error(`Expected value of type string at key: ${key}`);
+  } else {
+    return <string> obj[key];
+  }
+}
+
+function unmarshalNumber(obj: any, key: string): number {
+  if (obj[key] === undefined || typeof obj[key] !== "number") {
+    throw new Error(`Expected value of type number at key: ${key}`);
+  } else {
+    return <number> obj[key];
+  }
+}
+
+function unmarshalBoolean(obj: any, key: string): boolean {
+  if (obj[key] === undefined || typeof obj[key] !== "boolean") {
+    throw new Error(`Expected value of type boolean at key: ${key}`);
+  } else {
+    return <boolean> obj[key];
+  }
+}
+
+function opt<T>(thunk: () => T): T | undefined {
+  try {
+    return thunk();
+  } catch(e) {
+    return undefined;
+  }
 }

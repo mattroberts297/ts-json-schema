@@ -7,28 +7,44 @@ export interface {{title}} {
 
 {{/objects}}
 {{#objects}}
-export function parse{{title}}(json: string): {{title}} {
-  const obj = JSON.parse(json);
-  {{#properties}}
-  {{#required}}
-  if (obj["{{name}}"] === undefined || typeof obj["{{name}}"] !== "{{type}}") {
-    throw new Error("Expected field of type {{type}}: {{name}}");
-  }
-  {{/required}}
-  {{/properties}}
+export function unmarshal{{title}}(obj: any): {{title}} {
   return {
     {{#properties}}
     {{#object}}
-    {{name}}: {{^required}}opt(() => {{/required}}parse{{type}}(obj["{{name}}"]){{^required}}){{/required}}{{^last}},{{/last}}
+    {{name}}: {{^required}}opt(() => {{/required}}unmarshal{{type}}(obj["{{name}}"]){{^required}}){{/required}}{{^last}},{{/last}}
     {{/object}}
     {{^object}}
-    {{name}}: <{{type}}{{^required}} | undefined{{/required}}> obj["{{name}}"]{{^last}},{{/last}}
+    {{name}}: {{^required}}opt(() => {{/required}}unmarshal{{capitalizedType}}(obj, "{{name}}"){{^required}}){{/required}}{{^last}},{{/last}}
     {{/object}}
     {{/properties}}
   };
 }
 
 {{/objects}}
+function unmarshalString(obj: any, key: string): string {
+  if (obj[key] === undefined || typeof obj[key] !== "string") {
+    throw new Error(`Expected value of type string at key: ${key}`);
+  } else {
+    return <string> obj[key];
+  }
+}
+
+function unmarshalNumber(obj: any, key: string): number {
+  if (obj[key] === undefined || typeof obj[key] !== "number") {
+    throw new Error(`Expected value of type number at key: ${key}`);
+  } else {
+    return <number> obj[key];
+  }
+}
+
+function unmarshalBoolean(obj: any, key: string): boolean {
+  if (obj[key] === undefined || typeof obj[key] !== "boolean") {
+    throw new Error(`Expected value of type boolean at key: ${key}`);
+  } else {
+    return <boolean> obj[key];
+  }
+}
+
 function opt<T>(thunk: () => T): T | undefined {
   try {
     return thunk();
