@@ -1,31 +1,22 @@
-{{#objects}}
-export interface {{title}} {
-  {{#properties}}
-  {{name}}{{^required}}?{{/required}}: {{type}};
-  {{/properties}}
+export interface Person {
+  age?: number;
+  firstName: string;
+  lastName: string;
 }
 
-{{/objects}}
-{{#objects}}
-export function parse{{title}}(json: string): {{title}} {
+export function parsePerson(json: string): Person {
   const obj = JSON.parse(json);
-  return unmarshal{{title}}(obj);
+  return unmarshalPerson(obj);
 }
 
-export function unmarshal{{title}}(obj: any): {{title}} {
+export function unmarshalPerson(obj: any): Person {
   return {
-    {{#properties}}
-    {{#object}}
-    {{name}}: {{^required}}opt(() => {{/required}}unmarshal{{type}}(obj.{{name}}){{^required}}){{/required}},
-    {{/object}}
-    {{^object}}
-    {{name}}: {{^required}}opt(() => {{/required}}unmarshal{{capitalizedType}}(obj, "{{name}}"){{^required}}){{/required}},
-    {{/object}}
-    {{/properties}}
+    age: opt(() => unmarshalNumber(obj, "age")),
+    firstName: unmarshalString(obj, "firstName"),
+    lastName: unmarshalString(obj, "lastName"),
   };
 }
 
-{{/objects}}
 function unmarshalString(obj: any, key: string): string {
   if (obj[key] === undefined || typeof obj[key] !== "string") {
     throw new Error(`Expected value of type string at key: ${key}`);

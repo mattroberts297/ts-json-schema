@@ -1,4 +1,4 @@
-import { unmarshalPerson, Person } from "./person-m";
+import { parsePerson, Person } from "./person";
 import "mocha";
 import { expect } from "chai";
 
@@ -11,12 +11,12 @@ function isError(person: Person | Error): person is Error {
   return !isPerson(person);
 }
 
-describe("generated parse", () => {
+describe("generated parsePerson", () => {
   it("should parse person json with no optional properties", () => {
     const firstName = "Matt";
     const lastName = "Roberts";
     const json = `{"firstName": "${firstName}", "lastName": "${lastName}"}`;
-    const person = unmarshalPerson(JSON.parse(json));
+    const person = parsePerson(json);
     expect(isPerson(person)).to.eq(true);
     if (isPerson(person)) {
       expect(person.firstName).to.eq(firstName);
@@ -30,7 +30,7 @@ describe("generated parse", () => {
     const lastName = "Roberts";
     const age = 30;
     const json = `{"firstName": "${firstName}", "lastName": "${lastName}", "age": ${age}}`;
-    const person = unmarshalPerson(JSON.parse(json));
+    const person = parsePerson(json);
     expect(isPerson(person)).to.eq(true);
     if (isPerson(person)) {
       expect(person.firstName).to.eq(firstName);
@@ -43,13 +43,13 @@ describe("generated parse", () => {
     const firstName = "Matt";
     const lastName = "Roberts";
     const json = `{"lastName": "${lastName}"}`;
-    expect(() => unmarshalPerson(JSON.parse(json))).to.throw(Error, "Expected value of type string at key: firstName");
+    expect(() => parsePerson(json)).to.throw(Error, "Expected value of type string at key: firstName");
   });
 
   it("should error on mistyped field", () => {
     const firstName = "Matt";
     const lastName = "Roberts";
     const json = `{"firstName": 123, "lastName": "${lastName}"}`;
-    expect(() => unmarshalPerson(JSON.parse(json))).to.throw(Error, "Expected value of type string at key: firstName");
+    expect(() => parsePerson(json)).to.throw(Error, "Expected value of type string at key: firstName");
   });
 });

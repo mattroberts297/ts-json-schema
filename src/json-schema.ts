@@ -4,14 +4,14 @@ export interface ObjectJsonSchema {
   properties: Properties;
   required?: string[];
 }
-  
+
 export interface Properties {
   [key: string]: JsonSchema;
 }
 
 export interface ArrayJsonSchema {
   type: "array";
-  items: JsonSchema
+  items: JsonSchema;
 }
 
 export interface StringJsonSchema {

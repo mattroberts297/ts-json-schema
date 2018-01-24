@@ -7,7 +7,7 @@ export function convert(schema: JsonSchema): MustacheDataView {
   function loop(schema: JsonSchema): MustacheJsonObject[] {
     if (schema.type === "object") {
       const lastKey = _.last(_.keys(schema.properties))
-      const mustacheProps = _.map(schema.properties, (v, k) => createMustacheJsonProperty(schema, v, k, k === lastKey));
+      const mustacheProps = _.sortBy(_.map(schema.properties, (v, k) => createMustacheJsonProperty(schema, v, k, k === lastKey)), p => p.name);
       const mustacheObj = {title: schema.title, properties: mustacheProps} as MustacheJsonObject;
       const mustacheObjs = _.flatMap(_.values(schema.properties), schema => loop(schema));
       return _.concat([mustacheObj], mustacheObjs);
