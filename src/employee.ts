@@ -16,11 +16,15 @@ export function parseEmployee(json: string): Employee {
 }
 
 export function unmarshalEmployee(obj: any): Employee {
-  return {
-    company: opt(() => unmarshalCompany(obj.company)),
-    firstName: unmarshalString(obj, "firstName"),
-    lastName: unmarshalString(obj, "lastName"),
-  };
+  if (obj === undefined || obj === null || typeof obj !== "object") {
+    throw new Error(`Expected object but actually found ${obj}`);
+  } else {
+    return {
+      company: opt(() => unmarshalCompany(obj.company)),
+      firstName: unmarshalString(obj.firstName),
+      lastName: unmarshalString(obj.lastName),
+    };
+  }
 }
 
 export function parseCompany(json: string): Company {
@@ -29,40 +33,52 @@ export function parseCompany(json: string): Company {
 }
 
 export function unmarshalCompany(obj: any): Company {
-  return {
-    name: unmarshalString(obj, "name"),
-    public: opt(() => unmarshalBoolean(obj, "public")),
-    size: opt(() => unmarshalNumber(obj, "size")),
-  };
-}
-
-function unmarshalString(obj: any, key: string): string {
-  if (obj[key] === undefined || typeof obj[key] !== "string") {
-    throw new Error(`Expected value of type string at key: ${key}`);
+  if (obj === undefined || obj === null || typeof obj !== "object") {
+    throw new Error(`Expected object but actually found ${obj}`);
   } else {
-    return obj[key] as string;
+    return {
+      name: unmarshalString(obj.name),
+      public: opt(() => unmarshalBoolean(obj.public)),
+      size: opt(() => unmarshalNumber(obj.size)),
+    };
   }
 }
 
-function unmarshalNumber(obj: any, key: string): number {
-  if (obj[key] === undefined || typeof obj[key] !== "number") {
-    throw new Error(`Expected value of type number at key: ${key}`);
+function unmarshalArray<T>(as: any, unmarshalT: (a: any) => T): T[] {
+  if (as === undefined || as === null || !Array.isArray(as)) {
+    throw new Error(`Expected array but actually found ${as}`);
   } else {
-    return obj[key] as number;
+    return as.map((a) => unmarshalT(a));
   }
 }
 
-function unmarshalBoolean(obj: any, key: string): boolean {
-  if (obj[key] === undefined || typeof obj[key] !== "boolean") {
-    throw new Error(`Expected value of type boolean at key: ${key}`);
+function unmarshalString(a: any): string {
+  if (a === undefined || a === null || typeof a !== "string") {
+    throw new Error(`Expected string but actually found ${a}`);
   } else {
-    return obj[key] as boolean;
+    return a as string;
   }
 }
 
-function opt<T>(thunk: () => T): T | undefined {
+function unmarshalNumber(a: any): number {
+  if (a === undefined || a === null || typeof a !== "number") {
+    throw new Error(`Expected number but actually found ${a}`);
+  } else {
+    return a as number;
+  }
+}
+
+function unmarshalBoolean(a: any): boolean {
+  if (a === undefined || a === null || typeof a !== "boolean") {
+    throw new Error(`Expected boolean but actually found ${a}`);
+  } else {
+    return a as boolean;
+  }
+}
+
+function opt<T>(f: () => T): T | undefined {
   try {
-    return thunk();
+    return f();
   } catch (e) {
     return undefined;
   }

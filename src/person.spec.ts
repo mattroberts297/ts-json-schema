@@ -1,11 +1,11 @@
-import { parsePerson, Person } from "./person";
-import "mocha";
 import { expect } from "chai";
+import "mocha";
+
+import { parsePerson, Person } from "./person";
 
 function isPerson(person: Person | Error): person is Person {
-  return (<Error>person).message === undefined;
+  return (person as Error).message === undefined;
 }
-
 
 function isError(person: Person | Error): person is Error {
   return !isPerson(person);
@@ -43,13 +43,13 @@ describe("generated parsePerson", () => {
     const firstName = "Matt";
     const lastName = "Roberts";
     const json = `{"lastName": "${lastName}"}`;
-    expect(() => parsePerson(json)).to.throw(Error, "Expected value of type string at key: firstName");
+    expect(() => parsePerson(json)).to.throw(Error, "Expected string but actually found undefined");
   });
 
   it("should error on mistyped field", () => {
     const firstName = "Matt";
     const lastName = "Roberts";
     const json = `{"firstName": 123, "lastName": "${lastName}"}`;
-    expect(() => parsePerson(json)).to.throw(Error, "Expected value of type string at key: firstName");
+    expect(() => parsePerson(json)).to.throw(Error, "Expected string but actually found 123");
   });
 });

@@ -9,3 +9,9 @@ TODO
 ## Usage
 
 See `json-schema-gen.spec.ts` for an example.
+
+## Known limitations
+
+- JSON schema objects must have a title.
+- JSON schema objects must not have the same title.
+- JSON schema must be in one file (no reference support).

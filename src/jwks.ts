@@ -1,35 +1,51 @@
-{{#objects}}
-export interface {{title}} {
-  {{#properties}}
-  {{name}}{{^required}}?{{/required}}: {{type}}{{#array}}[]{{/array}};
-  {{/properties}}
+export interface JwkSet {
+  keys: Jwk[];
 }
 
-{{/objects}}
-{{#objects}}
-export function parse{{title}}(json: string): {{title}} {
+export interface Jwk {
+  alg: string;
+  e: string;
+  kid: string;
+  kty: string;
+  n: string;
+  use?: string;
+}
+
+export function parseJwkSet(json: string): JwkSet {
   const obj = JSON.parse(json);
-  return unmarshal{{title}}(obj);
+  return unmarshalJwkSet(obj);
 }
 
-export function unmarshal{{title}}(obj: any): {{title}} {
+export function unmarshalJwkSet(obj: any): JwkSet {
   if (obj === undefined || obj === null || typeof obj !== "object") {
     throw new Error(`Expected object but actually found ${obj}`);
   } else {
     return {
-      {{#properties}}
-      {{#array}}
-      {{name}}: {{^required}}opt(() => {{/required}}unmarshalArray(obj.{{name}}, unmarshal{{capitalizedType}}){{^required}}){{/required}},
-      {{/array}}
-      {{^array}}
-      {{name}}: {{^required}}opt(() => {{/required}}unmarshal{{capitalizedType}}(obj.{{name}}){{^required}}){{/required}},
-      {{/array}}
-      {{/properties}}
+      keys: unmarshalArray(obj.keys, unmarshalJwk),
     };
   }
 }
 
-{{/objects}}
+export function parseJwk(json: string): Jwk {
+  const obj = JSON.parse(json);
+  return unmarshalJwk(obj);
+}
+
+export function unmarshalJwk(obj: any): Jwk {
+  if (obj === undefined || obj === null || typeof obj !== "object") {
+    throw new Error(`Expected object but actually found ${obj}`);
+  } else {
+    return {
+      alg: unmarshalString(obj.alg),
+      e: unmarshalString(obj.e),
+      kid: unmarshalString(obj.kid),
+      kty: unmarshalString(obj.kty),
+      n: unmarshalString(obj.n),
+      use: opt(() => unmarshalString(obj.use)),
+    };
+  }
+}
+
 function unmarshalArray<T>(as: any, unmarshalT: (a: any) => T): T[] {
   if (as === undefined || as === null || !Array.isArray(as)) {
     throw new Error(`Expected array but actually found ${as}`);

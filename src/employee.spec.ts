@@ -38,7 +38,7 @@ describe("generated parseEmployee", () => {
   };
 
   const employeeWithMistypedProperties = {
-    firstName: 1,
+    firstName: 123,
     lastName,
   };
 
@@ -78,11 +78,11 @@ describe("generated parseEmployee", () => {
 
   it("should error on missing field", () => {
     const json = JSON.stringify(employeeWithMissingProperties);
-    expect(() => parseEmployee(json)).to.throw(Error, "Expected value of type string at key: firstName");
+    expect(() => parseEmployee(json)).to.throw(Error, "Expected string but actually found undefined");
   });
 
   it("should error on missing field", () => {
     const json = JSON.stringify(employeeWithMistypedProperties);
-    expect(() => parseEmployee(json)).to.throw(Error, "Expected value of type string at key: firstName");
+    expect(() => parseEmployee(json)).to.throw(Error, "Expected string but actually found 123");
   });
 });
