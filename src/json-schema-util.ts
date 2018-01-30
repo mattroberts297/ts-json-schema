@@ -11,23 +11,35 @@ function parseAny(json: any): JsonSchema {
     if (json.type === "object") {
       if (json.properties !== undefined && _.isPlainObject(json.properties)) {
         const properties = _.mapValues(json.properties, (v) => parseAny(v));
-        const title = (json.title !== undefined && typeof json.title === "string") ? <string> json.title : undefined;
-        const required = (json.required !== undefined && _.isArray(json.required)) ? <string[]> _.filter(json.required, a => (typeof a === "string")) : undefined;
-        return <JsonSchema>({ type: "object", title: title, properties: properties, required: required });
+        const title = hasTitle(json) ? json.title : undefined;
+        const required = hasRequired(json) ? json.required : undefined;
+        return ({ type: "object", title, properties, required }) as JsonSchema;
       } else {
         throw new Error("Missing properties array");
       }
     } else if (json.type === "string") {
-      return <JsonSchema>({ type: "string" });
+      return ({ type: "string" }) as JsonSchema;
     } else if (json.type === "integer") {
-      return <JsonSchema>({ type: "integer" });
+      return ({ type: "integer" }) as JsonSchema;
     } else if (json.type === "boolean") {
-      return <JsonSchema>({ type: "boolean" });
+      return ({ type: "boolean" }) as JsonSchema;
     } else {
-      // TODO Add support for all json schema types.
+      // TODO Add support for all json schema types i.e. array.
       throw new Error(`Unsupported type: ${json.type}`);
     }
   } else {
     throw new Error("Missing type");
   }
+}
+
+function hasTitle(json: any): json is { title: string } {
+  return (json.title !== undefined && typeof json.title === "string");
+}
+
+function hasAnyRequired(json: any): json is { required: any[] } {
+  return (json.required !== undefined && _.isArray(json.required));
+}
+
+function hasRequired(json: any): json is { required: string[] } {
+  return hasAnyRequired(json) ? _.every(json.required, (a) => (typeof a === "string")) : false;
 }
