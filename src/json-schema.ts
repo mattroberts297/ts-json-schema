@@ -22,4 +22,8 @@ export interface IntegerJsonSchema {
   type: "integer";
 }
 
-export type JsonSchema = ObjectJsonSchema | ArrayJsonSchema | StringJsonSchema | IntegerJsonSchema;
+export interface BooleanJsonSchema {
+  type: "boolean";
+}
+
+export type JsonSchema = ObjectJsonSchema | ArrayJsonSchema | StringJsonSchema | IntegerJsonSchema | BooleanJsonSchema;

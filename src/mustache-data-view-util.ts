@@ -12,12 +12,14 @@ export function convert(schema: JsonSchema): MustacheDataView {
       const mustacheObjs = _.flatMap(_.values(schema.properties), schema => loop(schema));
       return _.concat([mustacheObj], mustacheObjs);
     } else if (schema.type === "string") {
-      return [];
+      return []; // No more objects, so return empty array.
     } else if (schema.type === "integer") {
-      return [];
+      return []; // No more objects, so return empty array.
+    } else if (schema.type === "boolean") {
+      return []; // No more objects, so return empty array.
     } else {
       // TODO Array support.
-      throw new Error(`Not implemented: ${schema.type}`)
+      throw new Error(`Conversion of JSON Schema arrays to Mustache Data View not implemented`)
     }  
   }
 
@@ -34,6 +36,8 @@ function deriveType(v: JsonSchema, k: string): string {
     return "number";
   } else if (v.type === "string") {
     return "string";
+  } else if (v.type === "boolean") {
+    return "boolean";
   } else {
     throw new Error("Unsupported type!");
   }

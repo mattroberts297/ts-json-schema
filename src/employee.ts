@@ -6,6 +6,7 @@ export interface Employee {
 
 export interface Company {
   name: string;
+  public?: boolean;
   size?: number;
 }
 
@@ -30,6 +31,7 @@ export function parseCompany(json: string): Company {
 export function unmarshalCompany(obj: any): Company {
   return {
     name: unmarshalString(obj, "name"),
+    public: opt(() => unmarshalBoolean(obj, "public")),
     size: opt(() => unmarshalNumber(obj, "size")),
   };
 }

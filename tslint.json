@@ -1,4 +1,7 @@
 {
   "extends": "tslint:recommended",
-  "rules": {"interface-name": [true, "never-prefix"]}
+  "rules": {
+    "interface-name": [true, "never-prefix"],
+    "no-unused-expression": false
+  }
 }

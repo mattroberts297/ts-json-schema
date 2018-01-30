@@ -36,7 +36,8 @@ describe("parse", () => {
           title: "Company",
           properties: {
             name: { type: "string" },
-            size: { type: "integer" }
+            size: { type: "integer" },
+            public: { type: "boolean" }
           },
           required: ["name"]
         }
