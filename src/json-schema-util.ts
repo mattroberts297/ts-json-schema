@@ -15,7 +15,14 @@ function parseAny(json: any): JsonSchema {
         const required = hasRequired(json) ? json.required : undefined;
         return ({ type: "object", title, properties, required }) as JsonSchema;
       } else {
-        throw new Error("Missing properties array");
+        throw new Error("Missing or empty properties on object definition");
+      }
+    } else if (json.type === "array") {
+      if (json.items !== undefined && _.isPlainObject(json.items)) {
+        const items = parseAny(json.items);
+        return {type: "array", items} as JsonSchema;
+      } else {
+        throw new Error("Missing or empty items on array definition");
       }
     } else if (json.type === "string") {
       return ({ type: "string" }) as JsonSchema;
@@ -24,7 +31,6 @@ function parseAny(json: any): JsonSchema {
     } else if (json.type === "boolean") {
       return ({ type: "boolean" }) as JsonSchema;
     } else {
-      // TODO Add support for all json schema types i.e. array.
       throw new Error(`Unsupported type: ${json.type}`);
     }
   } else {
