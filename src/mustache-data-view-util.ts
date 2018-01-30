@@ -3,13 +3,14 @@ import {MustacheDataView, MustacheJsonObject, MustacheJsonProperty} from "./must
 
 import * as _ from "lodash";
 
-export function convert(schema: JsonSchema): MustacheDataView {
+export function convert(s: JsonSchema): MustacheDataView {
   function loop(schema: JsonSchema): MustacheJsonObject[] {
     if (schema.type === "object") {
-      const lastKey = _.last(_.keys(schema.properties))
-      const mustacheProps = _.sortBy(_.map(schema.properties, (v, k) => createMustacheJsonProperty(schema, v, k, k === lastKey)), p => p.name);
-      const mustacheObj = {title: schema.title, properties: mustacheProps} as MustacheJsonObject;
-      const mustacheObjs = _.flatMap(_.values(schema.properties), schema => loop(schema));
+      const lastKey = _.last(_.keys(schema.properties));
+      const unsortedProperties = _.map(schema.properties, (v, k) => createProperty(schema, v, k, k === lastKey));
+      const properties = _.sortBy(unsortedProperties, (p) => p.name);
+      const mustacheObj = {title: schema.title, properties} as MustacheJsonObject;
+      const mustacheObjs = _.flatMap(_.values(schema.properties), (ns) => loop(ns));
       return _.concat([mustacheObj], mustacheObjs);
     } else if (schema.type === "string") {
       return []; // No more objects, so return empty array.
@@ -19,12 +20,12 @@ export function convert(schema: JsonSchema): MustacheDataView {
       return []; // No more objects, so return empty array.
     } else {
       // TODO Array support.
-      throw new Error(`Conversion of JSON Schema arrays to Mustache Data View not implemented`)
-    }  
+      throw new Error(`Conversion of JSON Schema arrays to Mustache Data View not implemented`);
+    }
   }
 
-  const mustacheObjs = loop(schema);
-  return {objects: mustacheObjs};  
+  const objects = loop(s);
+  return {objects};
 }
 
 function deriveType(v: JsonSchema, k: string): string {
@@ -41,16 +42,16 @@ function deriveType(v: JsonSchema, k: string): string {
   } else {
     throw new Error("Unsupported type!");
   }
-} 
+}
 
-function createMustacheJsonProperty(s: ObjectJsonSchema, v: JsonSchema, k: string, last: boolean): MustacheJsonProperty {
+function createProperty(s: ObjectJsonSchema, v: JsonSchema, k: string, last: boolean): MustacheJsonProperty {
   return {
-    name: k,
-    type: deriveType(v, k),
-    capitalizedType: _.capitalize(deriveType(v, k)),
-    required: (_.findIndex(s.required, r => r === k) !== -1),
-    object: (v.type === "object"),
     array: (v.type === "array"),
-    last: last
-  }
-} 
+    capitalizedType: _.capitalize(deriveType(v, k)),
+    last,
+    name: k,
+    object: (v.type === "object"),
+    required: (_.findIndex(s.required, (r) => r === k) !== -1),
+    type: deriveType(v, k),
+  };
+}
