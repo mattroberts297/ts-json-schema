@@ -18,9 +18,10 @@ export function convert(s: JsonSchema): MustacheDataView {
       return []; // No more objects, so return empty array.
     } else if (schema.type === "boolean") {
       return []; // No more objects, so return empty array.
+    } else if (schema.type === "array") {
+      return loop(schema.items);
     } else {
-      // TODO Array support.
-      throw new Error(`Conversion of JSON Schema arrays to Mustache Data View not implemented`);
+      throw new Error("Unsupported JSON Schema type");
     }
   }
 

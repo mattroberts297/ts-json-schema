@@ -27,4 +27,13 @@ describe("convert", () => {
       .then((v) => expect(v.objects.length).to.eq(2))
       .then(() => done(), (err) => done(err));
   });
+
+  it("should convert the jwks schema to a mustache data view", (done) => {
+    const file = readFile("./etc/jwks.schema.json");
+    const schema = file.then(parse);
+    const view = schema.then(convert);
+    view
+      .then((v) => expect(v.objects.length).to.eq(2))
+      .then(() => done(), (err) => done(err));
+  });
 });
