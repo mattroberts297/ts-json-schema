@@ -1,6 +1,6 @@
 {
-  "name": "lambda-echo-ts",
-  "version": "1.0.0",
+  "name": "ts-json-schema",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "typings": "lib/index",
