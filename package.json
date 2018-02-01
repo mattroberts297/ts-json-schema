@@ -9,7 +9,7 @@
     "test": "mocha lib/**/*.spec.js",
     "prepublish": "tsc --declaration"
   },
-  "author": "",
+  "author": "mail@mattroberts.io",
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "^3.5.1",
