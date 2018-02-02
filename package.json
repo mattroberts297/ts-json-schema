@@ -5,8 +5,9 @@
   "main": "index.js",
   "typings": "lib/index",
   "scripts": {
-    "pretest": "tsc --declaration",
-    "test": "mocha lib/**/*.spec.js"
+    "pretest": "tsc",
+    "test": "mocha lib/**/*.spec.js",
+    "prepublish": "tsc --declaration"
   },
   "author": "mail@mattroberts.io",
   "license": "MIT",
