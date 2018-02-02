@@ -1,6 +1,6 @@
 {
   "name": "ts-json-schema-code-gen",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "main": "index.js",
   "typings": "lib/index",
