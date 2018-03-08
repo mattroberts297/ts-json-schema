@@ -45,10 +45,14 @@ function deriveType(v: JsonSchema, k: string): string {
   }
 }
 
+function pascalCase(s: string): string {
+  return _.upperFirst(_.camelCase(s));
+}
+
 function createProperty(s: ObjectJsonSchema, v: JsonSchema, k: string, last: boolean): MustacheJsonProperty {
   return {
     array: (v.type === "array"),
-    capitalizedType: _.capitalize(deriveType(v, k)),
+    capitalizedType: pascalCase(deriveType(v, k)),
     last,
     name: k,
     object: (v.type === "object"),
